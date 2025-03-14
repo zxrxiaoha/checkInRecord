@@ -197,12 +197,14 @@ function renderCalendar() {
   const firstDay = new Date(currentYear, currentMonth, 1);
   const lastDay = new Date(currentYear, currentMonth + 1, 0);
 
-  const recordDates = new Map(records.map(r => [r.date, r]));
+  const recordDates = new Map(records.map((r) => [r.date, r]));
 
   let calendarHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
             <button class="btn" onclick="changeMonth(-1)">上个月</button>
-            <h2>${currentYear}年${currentMonth + 1}月</h2>
+            <h2 style="margin: 0 10px;">${currentYear}年${
+    currentMonth + 1
+  }月</h2>
             <button class="btn" onclick="changeMonth(1)">下个月</button>
         </div>
         <div class="calendar-grid">
@@ -222,35 +224,56 @@ function renderCalendar() {
 
   // 填充日期
   for (let day = 1; day <= lastDay.getDate(); day++) {
-    const date = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const date = `${currentYear}-${String(currentMonth + 1).padStart(
+      2,
+      "0"
+    )}-${String(day).padStart(2, "0")}`;
     const record = recordDates.get(date);
     const isToday = date === new Date().toISOString().split("T")[0];
     calendarHTML += `
-            <div class="calendar-day ${record ? "has-record" : ""} ${isToday ? "today" : ""}" 
+            <div class="calendar-day ${record ? "has-record" : ""} ${
+      isToday ? "today" : ""
+    }" 
                 onclick="handleDayClick('${date}')" 
                 data-date="${date}">
                 <div>${day}</div>
-                ${record ? `<div class="calendar-content">${record.content}</div>` : ''}
+                ${
+                  record
+                    ? `<div class="calendar-content">${record.content}</div>`
+                    : ""
+                }
             </div>
         `;
   }
 
   calendarHTML += "</div>";
   document.getElementById("calendar").innerHTML = calendarHTML;
+
+  // 添加移动端双指缩放支持
+  const calendar = document.getElementById("calendar");
+  if (calendar) {
+    calendar.addEventListener(
+      "touchstart",
+      function (e) {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+        }
+      },
+      { passive: false }
+    );
+  }
 }
 
-// 修改点击处理函数
+// 修改点击处理函数，使用自定义弹窗而不是系统prompt
 async function handleDayClick(date) {
   const today = new Date().toISOString().split("T")[0];
   if (date !== today) {
     return; // 只允许点击当天日期
   }
 
-  const content = prompt("请输入打卡内容：");
-  if (content === null) return; // 用户取消输入
+  // 滚动到表单区域
+  document.querySelector(".record-form").scrollIntoView({ behavior: "smooth" });
 
-  document.getElementById("content").value = content;
-  
   const records = getRecords();
   const todayRecord = records.find((r) => r.date === today);
 
@@ -267,6 +290,120 @@ async function handleDayClick(date) {
       toggleClock();
     }
   }
+}
+
+// 修改编辑记录函数，使用自定义弹窗
+function editRecord(id) {
+  const records = getRecords();
+  const record = records.find((r) => r.id === id);
+  if (!record) return;
+
+  // 滚动到表单区域并填充内容
+  document.querySelector(".record-form").scrollIntoView({ behavior: "smooth" });
+  document.getElementById("content").value = record.content;
+
+  // 更新按钮文本提示编辑状态
+  const button = document.getElementById("clockButton");
+  button.textContent = "更新内容";
+
+  // 临时保存编辑状态
+  button.dataset.editId = id;
+
+  // 修改按钮点击事件
+  const originalOnclick = button.onclick;
+  button.onclick = () => {
+    const newContent = document.getElementById("content").value.trim();
+    if (!newContent) {
+      alert("请输入内容");
+      return;
+    }
+
+    record.content = newContent;
+    saveRecords(records);
+
+    // 重置表单和按钮
+    document.getElementById("content").value = "";
+    button.textContent = "开始打卡";
+    delete button.dataset.editId;
+    button.onclick = originalOnclick;
+
+    renderRecords();
+    renderCalendar();
+  };
+}
+
+// 修改渲染记录列表，优化移动端显示
+function renderRecords(searchText = "") {
+  const records = getRecords().filter(
+    (record) =>
+      !searchText ||
+      record.content.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const recordList = document.getElementById("recordList");
+  recordList.innerHTML = records
+    .reverse()
+    .map(
+      (record) => `
+        <div class="record-item" data-id="${record.id}">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px;">
+                <div style="flex: 1; min-width: 200px;">
+                    ${new Date(record.timestamp).toLocaleDateString()}
+                    ${
+                      record.startTime
+                        ? `
+                        <br>开始时间: ${new Date(
+                          record.startTime
+                        ).toLocaleTimeString()}
+                    `
+                        : ""
+                    }
+                    ${
+                      record.endTime
+                        ? `
+                        ~ 结束时间: ${new Date(
+                          record.endTime
+                        ).toLocaleTimeString()}
+                        <br>时长: ${(() => {
+                          const duration = Math.floor(
+                            (record.endTime - record.startTime) / (1000 * 60)
+                          );
+                          const hours = Math.floor(duration / 60);
+                          const minutes = duration % 60;
+                          return `${hours}小时${minutes}分钟`;
+                        })()}
+                    `
+                        : ""
+                    }
+                </div>
+                <div style="display: flex; gap: 5px;align-items: center">
+                    <button class="btn" onclick="editRecord('${
+                      record.id
+                    }')">编辑</button>
+                    <button class="btn" onclick="deleteRecord('${
+                      record.id
+                    }')">删除</button>
+                </div>
+            </div>
+            <div style="margin: 10px 0; word-break: break-all;">${
+              record.content
+            }</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                ${record.media
+                  .map((media) => {
+                    if (media.type.startsWith("image/")) {
+                      return `<img src="${media.data}" class="media-preview" onclick="this.requestFullscreen()">`;
+                    } else if (media.type.startsWith("video/")) {
+                      return `<video src="${media.data}" class="media-preview" controls></video>`;
+                    }
+                    return "";
+                  })
+                  .join("")}
+            </div>
+        </div>
+    `
+    )
+    .join("");
 }
 
 // 添加月份切换函数
@@ -397,17 +534,17 @@ document.getElementById("importFile").addEventListener("change", async (e) => {
 // 编辑记录
 // 编辑记录
 function editRecord(id) {
-    const records = getRecords();
-    const record = records.find(r => r.id === id);
-    if (!record) return;
+  const records = getRecords();
+  const record = records.find((r) => r.id === id);
+  if (!record) return;
 
-    const newContent = prompt('编辑内容：', record.content);
-    if (newContent === null) return;
+  const newContent = prompt("编辑内容：", record.content);
+  if (newContent === null) return;
 
-    record.content = newContent.trim();
-    saveRecords(records);
-    renderRecords();
-    renderCalendar(); // 添加这行来更新日历显示
+  record.content = newContent.trim();
+  saveRecords(records);
+  renderRecords();
+  renderCalendar(); // 添加这行来更新日历显示
 }
 
 // 删除记录
