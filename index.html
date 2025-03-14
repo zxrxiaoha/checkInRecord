@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打卡系统</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="check-in-section">
+            <button id="startCheckIn">开始打卡</button>
+            <div id="timer">00:00:00</div>
+        </div>
+
+        <div class="calendar-section">
+            <div id="calendar"></div>
+        </div>
+
+        <div class="records-section">
+            <div class="records-header">
+                <h2>打卡记录</h2>
+                <div class="record-actions">
+                    <input type="file" id="importRecords" accept=".xlsx" style="display: none">
+                    <button onclick="document.getElementById('importRecords').click()">导入记录</button>
+                    <button id="exportRecords">导出记录</button>
+                </div>
+            </div>
+            <div id="records"></div>
+        </div>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+</body>
+</html>
