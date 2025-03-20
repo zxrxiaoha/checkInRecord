@@ -51,20 +51,14 @@ class RecordManager {
     // 渲染记录列表
     renderRecordList(records, container) {
         const html = `
-            <div class="record-item">
-                <div class="record-date">打卡时间</div>
-                <div class="record-content">内容</div>
-                <div class="record-duration">用时</div>
-                <div class="record-actions">操作</div>
-            </div>
             ${records.map(record => `
                 <div class="record-item ${record.isMakeup ? 'makeup' : ''}" data-id="${record.id}">
-                    <div class="record-date">${new Date(record.date).toLocaleString()}${record.isMakeup ? '（补卡）' : ''}</div>
-                    <div class="record-content">${record.content || '无内容'}</div>
-                    <div class="record-duration">${record.duration}</div>
+                    <div class="record-date">打卡时间：${new Date(record.date).toLocaleString()}${record.isMakeup ? '（补卡）' : ''}</div>
+                    <div class="record-content">内容：${record.content || '无内容'}</div>
+                    <div class="record-duration">用时：${record.duration}</div>
                     <div class="record-actions">
                         <button onclick="app.editRecord('${record.id}')">编辑</button>
-                        <button onclick="app.deleteRecord('${record.id}')">删除</button>
+                        <button class="record-actions-del" onclick="app.deleteRecord('${record.id}')">删除</button>
                     </div>
                 </div>
             `).join('')}`;

@@ -46,7 +46,7 @@
     background: white;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     max-width: 400px;
 }
 
@@ -56,7 +56,7 @@
     background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* 移动端响应式布局 */
@@ -76,16 +76,42 @@
 
     .record-item {
         grid-template-columns: 1fr;
-        gap: 10px;
-        text-align: center;
+        padding: 12px;
+        text-align: left;
     }
 
-    .record-actions {
+    .record-item>div {
+        margin-bottom: 8px;
+    }
+
+    .record-item .record-date {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .record-item .record-content {
+        font-size: 16px;
+        margin: 8px 0;
+    }
+
+    .record-item .record-duration {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .record-item .record-actions {
         display: flex;
-        justify-content: center;
-        margin-top: 10px;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .record-item .record-actions button {
+        padding: 6px 12px;
+        font-size: 14px;
+        min-width: 60px;
     }
 }
+
 .calendar-header {
     display: flex;
     justify-content: space-between;
@@ -157,7 +183,7 @@
     background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .records-header {
@@ -263,9 +289,11 @@
         justify-content: flex-start;
     }
 }
+
 .record-item.makeup {
     background-color: rgba(165, 214, 167, 0.2);
     position: relative;
+    margin-bottom: 10px;
 }
 
 .makeup-badge {
@@ -278,7 +306,7 @@
     border-radius: 12px;
     font-size: 12px;
     font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
@@ -286,10 +314,10 @@
     padding: 5px 10px;
     margin-left: 5px;
     font-size: 14px;
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: #0099ff;
+    color: #fff;
 }
 
-.record-item .record-actions button:hover {
-    background-color: #e0e0e0;
+.record-item .record-actions .record-actions-del {
+    background-color: #ff0000;
 }
