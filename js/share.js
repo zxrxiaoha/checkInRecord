@@ -150,12 +150,36 @@ class ShareManager {
 
         const closeBtn = document.createElement('button');
         closeBtn.textContent = '关闭';
-        closeBtn.style.marginTop = '10px';
+        closeBtn.style.cssText = `
+            margin-top: 10px;
+            padding: 8px 20px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #333;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        `;
+        closeBtn.onmouseover = () => closeBtn.style.backgroundColor = '#e8e8e8';
+        closeBtn.onmouseout = () => closeBtn.style.backgroundColor = '#f5f5f5';
         closeBtn.onclick = () => document.body.removeChild(previewContainer);
 
         const shareBtn = document.createElement('button');
         shareBtn.textContent = '分享';
-        shareBtn.style.marginLeft = '10px';
+        shareBtn.style.cssText = `
+            margin-left: 10px;
+            padding: 8px 20px;
+            background-color: #4158D0;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        `;
+        shareBtn.onmouseover = () => shareBtn.style.backgroundColor = '#3448b0';
+        shareBtn.onmouseout = () => shareBtn.style.backgroundColor = '#4158D0';
         shareBtn.onclick = () => this.shareAchievement();
 
         const buttonContainer = document.createElement('div');
