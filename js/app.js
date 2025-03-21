@@ -27,6 +27,21 @@ class App {
             }
         });
 
+        // 搜索按钮事件
+        document.getElementById('searchRecords').addEventListener('click', () => {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const keyword = document.getElementById('searchKeyword').value.trim();
+            
+            const filteredRecords = recordManager.searchRecords(checkIn.getAllRecords(), {
+                startDate,
+                endDate,
+                keyword
+            });
+            
+            this.updateRecordList(filteredRecords);
+        });
+
         // 日历日期选择事件
         document.addEventListener('dateSelected', (e) => {
             const date = e.detail.date;
@@ -125,6 +140,14 @@ class App {
                 }
             }
         });
+
+        // 生成测试数据
+        if (!localStorage.getItem('checkInRecords')) {
+            const testRecords = recordManager.generateTestData();
+            checkIn.records.push(...testRecords);
+            checkIn.saveRecords();
+            this.updateUI();
+        }
     }
 
     // 结束打卡
@@ -169,9 +192,9 @@ class App {
     }
 
     // 更新记录列表
-    updateRecordList() {
+    updateRecordList(records = checkIn.getAllRecords()) {
         const recordsContainer = document.getElementById('records');
-        recordManager.renderRecordList(checkIn.getAllRecords(), recordsContainer);
+        recordManager.renderRecordList(records, recordsContainer);
     }
 }
 

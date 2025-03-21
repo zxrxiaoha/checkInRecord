@@ -18,7 +18,15 @@
         <div class="calendar-section">
             <div id="calendar"></div>
         </div>
-
+        <div class="search-section">
+            <div class="date-range">
+                <input type="date" id="startDate" placeholder="开始日期">
+                <span>至</span>
+                <input type="date" id="endDate" placeholder="结束日期">
+            </div>
+            <input type="text" id="searchKeyword" placeholder="搜索内容关键词">
+            <button id="searchRecords">搜索</button>
+        </div>
         <div class="records-section">
             <div class="records-header">
                 <h2>打卡记录</h2>
@@ -28,7 +36,7 @@
                     <button id="exportRecords">导出记录</button>
                 </div>
             </div>
-            <div id="records"></div>
+            <div id="records" class="virtual-list-container"></div>
         </div>
     </div>
 

@@ -55,6 +55,69 @@
     max-width: 400px;
 }
 
+/* 搜索区域样式 */
+.search-section {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.date-range {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.date-range input[type="date"] {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#searchKeyword {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 200px;
+}
+
+#searchRecords {
+    padding: 5px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#searchRecords:hover {
+    background-color: #45a049;
+}
+
+/* 虚拟列表样式 */
+.virtual-list-container {
+    height: 600px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.record-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    background: white;
+    transition: background-color 0.2s;
+}
+
+.record-item:hover {
+    background-color: #f5f5f5;
+}
+
+.record-item.makeup {
+    background-color: #fff3e0;
+}
 
 /* 移动端响应式布局 */
 @media screen and (max-width: 768px) {
@@ -82,24 +145,15 @@
 
     .record-item .record-content {
         font-size: 16px;
-        margin: 8px 0;
     }
 
-    .record-item .record-duration {
-        font-size: 14px;
-        color: #666;
+    .search-section {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .record-item .record-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-    }
-
-    .record-item .record-actions button {
-        padding: 6px 12px;
-        font-size: 14px;
-        min-width: 60px;
+    .date-range {
+        flex-wrap: wrap;
     }
 }
 
@@ -169,34 +223,69 @@
     cursor: default;
 }
 
-/* 记录列表样式 */
+/* 记录列表区域样式 */
 .records-section {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
+    background: white;
+    border-radius: 8px;
+    padding: 15px 0;
 }
 
 .records-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-.records-header h2 {
-    margin: 0;
+.record-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.virtual-list-container {
+    height: 600px;
+    overflow-y: auto;
+    position: relative;
+    border-radius: 4px;
+}
+
+.record-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    background: white;
+}
+
+.record-item.makeup {
+    background-color: #fff8e1;
+}
+
+.record-date {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.record-content {
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.record-duration {
+    color: #999;
+    font-size: 0.9em;
 }
 
 .record-actions button {
-    padding: 8px 15px;
-    margin-left: 10px;
-    background-color: #2196F3;
-    color: white;
+    padding: 5px 10px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.record-actions-del {
+    background-color: #f44336 !important;
 }
 
 .record-actions button:hover {
@@ -212,6 +301,7 @@
     border-bottom: 1px solid #eee;
     background-color: #fff;
     transition: background-color 0.2s;
+    margin: 10px 5px;
 }
 
 .record-item:hover {
