@@ -8,6 +8,92 @@ class StatsManager {
         this.distributionChart = null;
     }
 
+    // 计算统计数据
+    calculateStats(records) {
+        // 计算平均打卡时长
+        let totalDuration = 0;
+        records.forEach(record => {
+            const [hours, minutes] = record.duration.split(':');
+            totalDuration += parseInt(hours) + parseInt(minutes) / 60;
+        });
+        const averageDuration = records.length > 0 ? (totalDuration / records.length).toFixed(1) : 0;
+
+        // 计算本周打卡次数
+        const today = new Date();
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - today.getDay());
+        const weeklyRecords = records.filter(record => {
+            const recordDate = new Date(record.date);
+            return recordDate >= weekStart && recordDate <= today;
+        });
+        const weeklyCount = weeklyRecords.length;
+
+        // 计算连续打卡天数
+        const sortedDates = records.map(record => new Date(record.date).toISOString().split('T')[0])
+            .sort()
+            .filter((date, index, array) => array.indexOf(date) === index);
+        let currentStreak = 0;
+        let maxStreak = 0;
+        let currentDate = new Date();
+
+        for (let i = sortedDates.length - 1; i >= 0; i--) {
+            const date = new Date(sortedDates[i]);
+            const expectedDate = new Date(currentDate);
+            expectedDate.setDate(currentDate.getDate() - 1);
+
+            if (date.toISOString().split('T')[0] === expectedDate.toISOString().split('T')[0]) {
+                currentStreak++;
+                currentDate = date;
+            } else {
+                break;
+            }
+        }
+        maxStreak = Math.max(currentStreak, maxStreak);
+
+        // 总打卡次数
+        const totalCount = records.length;
+
+        return {
+            averageDuration,
+            weeklyCount,
+            streak: maxStreak,
+            totalCount
+        };
+    }
+
+    // 更新统计面板
+    updateStatsPanel() {
+        const records = checkIn.getAllRecords();
+        const stats = this.calculateStats(records);
+
+        // 创建或更新统计面板
+        let statsPanel = document.querySelector('.stats-panel');
+        if (!statsPanel) {
+            statsPanel = document.createElement('div');
+            statsPanel.className = 'stats-panel';
+            document.querySelector('.stats-section').insertBefore(statsPanel, document.querySelector('.chart-container'));
+        }
+
+        statsPanel.innerHTML = `
+            <div class="stats-card">
+                <h3>平均打卡时长</h3>
+                <p>${stats.averageDuration} 小时</p>
+            </div>
+            <div class="stats-card">
+                <h3>本周打卡次数</h3>
+                <p>${stats.weeklyCount} 次</p>
+            </div>
+            <div class="stats-card">
+                <h3>连续打卡天数</h3>
+                <p>${stats.streak} 天</p>
+            </div>
+            <div class="stats-card">
+                <h3>总打卡次数</h3>
+                <p>${stats.totalCount} 次</p>
+            </div>
+        `;
+    }
+
     initCharts() {
         if (this.trendChart || this.durationChart || this.distributionChart) return;
         // 初始化趋势图
@@ -90,6 +176,7 @@ class StatsManager {
             this.initCharts();
         }
         const records = checkIn.getAllRecords();
+        this.updateStatsPanel(); // 添加统计面板更新
         this.updateTrendChart(records);
         this.updateDurationChart(records);
         this.updateDistributionChart(records);

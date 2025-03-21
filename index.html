@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>打卡系统</title>
     <link rel="stylesheet" href="./index.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/charts.js"></script>
 </head>
 
 <body>
@@ -31,9 +31,14 @@
                 <button id="searchRecords">搜索</button>
             </div>
             <button id="shareAchievement">分享成就</button>
+            <button id="createRecords">生成测试数据</button>
+            <button id="clearRecords">清空数据</button>
             <div class="records-section">
                 <div class="records-header">
-                    <h2>打卡记录</h2>
+                    <div>
+                        <h2>打卡记录</h2>
+                        <div id="list-sum"></div>
+                    </div>
                     <div class="record-actions">
                         <input type="file" id="importRecords" accept=".xlsx" style="display: none">
                         <button onclick="document.getElementById('importRecords').click()">导入记录</button>

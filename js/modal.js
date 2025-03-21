@@ -139,14 +139,64 @@ class ModalManager {
             const modalElement = this.modalContainer.firstElementChild;
             const contentElement = modalElement.querySelector('.modal-content');
             
+            // 添加淡出动画
             modalElement.style.opacity = '0';
             contentElement.style.transform = 'translateY(-20px)';
             
+            // 立即移除事件监听器
+            const buttons = this.modalContainer.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.onclick = null;
+                button.onmouseover = null;
+                button.onmouseout = null;
+            });
+            
+            // 确保在动画完成后移除DOM元素
+            const container = this.modalContainer;
+            this.modalContainer = null; // 立即清空引用
+            
             setTimeout(() => {
-                document.body.removeChild(this.modalContainer);
-                this.modalContainer = null;
+                if (container && container.parentNode) {
+                    document.body.removeChild(container);
+                }
             }, 300);
         }
+    }
+
+    // 显示加载提示
+    showLoading(message = '加载中...') {
+        const modal = this.createModal({
+            title: '',
+            content: `
+                <div style="text-align: center;">
+                    <div class="loading-spinner" style="
+                        width: 40px;
+                        height: 40px;
+                        margin: 20px auto;
+                        border: 4px solid #f3f3f3;
+                        border-top: 4px solid #3498db;
+                        border-radius: 50%;
+                        animation: spin 1s linear infinite;
+                    "></div>
+                    <style>
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    </style>
+                    <div style="margin-top: 15px; color: #666;">${message}</div>
+                </div>
+            `
+        });
+
+        modal.querySelector('.modal-content').style.padding = '20px';
+        modal.querySelector('h3').style.display = 'none';
+        modal.querySelector('.modal-footer').style.display = 'none';
+    }
+
+    // 隐藏加载提示
+    hideLoading() {
+        this.closeModal();
     }
 }
 
