@@ -6,37 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>打卡系统</title>
     <link rel="stylesheet" href="./index.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <div class="container">
         <div class="check-in-section">
             <button id="startCheckIn">开始打卡</button>
+            <button id="toggleStats">查看统计</button>
             <div id="timer">00:00:00</div>
         </div>
 
-        <div class="calendar-section">
-            <div id="calendar"></div>
-        </div>
-        <div class="search-section">
-            <div class="date-range">
-                <input type="date" id="startDate" placeholder="开始日期">
-                <span>至</span>
-                <input type="date" id="endDate" placeholder="结束日期">
+        <div id="mainContent">
+            <div class="calendar-section">
+                <div id="calendar"></div>
             </div>
-            <input type="text" id="searchKeyword" placeholder="搜索内容关键词">
-            <button id="searchRecords">搜索</button>
+            <div class="search-section">
+                <div class="date-range">
+                    <input type="date" id="startDate" placeholder="开始日期">
+                    <span>至</span>
+                    <input type="date" id="endDate" placeholder="结束日期">
+                </div>
+                <input type="text" id="searchKeyword" placeholder="搜索内容关键词">
+                <button id="searchRecords">搜索</button>
+            </div>
+            <div class="records-section">
+                <div class="records-header">
+                    <h2>打卡记录</h2>
+                    <div class="record-actions">
+                        <input type="file" id="importRecords" accept=".xlsx" style="display: none">
+                        <button onclick="document.getElementById('importRecords').click()">导入记录</button>
+                        <button id="exportRecords">导出记录</button>
+                    </div>
+                </div>
+                <div id="records" class="virtual-list-container"></div>
+            </div>
         </div>
-        <div class="records-section">
-            <div class="records-header">
-                <h2>打卡记录</h2>
-                <div class="record-actions">
-                    <input type="file" id="importRecords" accept=".xlsx" style="display: none">
-                    <button onclick="document.getElementById('importRecords').click()">导入记录</button>
-                    <button id="exportRecords">导出记录</button>
+
+        <div id="statsContent" style="display: none;">
+            <div class="stats-section">
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="durationChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="distributionChart"></canvas>
                 </div>
             </div>
-            <div id="records" class="virtual-list-container"></div>
         </div>
     </div>
 

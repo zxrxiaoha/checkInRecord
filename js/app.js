@@ -3,6 +3,7 @@ import checkIn from './checkIn.js';
 import calendar from './calendar.js';
 import recordManager from './recordManager.js';
 import modal from './modal.js';
+import stats from './stats.js';
 
 class App {
     constructor() {
@@ -24,6 +25,25 @@ class App {
                 document.getElementById('startCheckIn').textContent = '结束打卡';
             } else {
                 this.endCheckIn();
+            }
+        });
+
+        // 统计页面切换事件
+        document.getElementById('toggleStats').addEventListener('click', () => {
+            const mainContent = document.getElementById('mainContent');
+            const statsContent = document.getElementById('statsContent');
+            const toggleBtn = document.getElementById('toggleStats');
+
+            if (mainContent.style.display !== 'none') {
+                mainContent.style.display = 'none';
+                statsContent.style.display = 'block';
+                toggleBtn.textContent = '返回主页';
+                stats.initCharts();
+                stats.updateCharts();
+            } else {
+                mainContent.style.display = 'block';
+                statsContent.style.display = 'none';
+                toggleBtn.textContent = '查看统计';
             }
         });
 
@@ -183,6 +203,7 @@ class App {
     updateUI() {
         this.updateCalendar();
         this.updateRecordList();
+        stats.updateCharts();
     }
 
     // 更新日历
