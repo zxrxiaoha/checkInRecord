@@ -282,7 +282,7 @@ class RecordManager {
       );
 
       records.push({
-        id: Date.now() + Math.random(),
+        id: Date.now(),
         date: date,
         content: contents[Math.floor(Math.random() * contents.length)],
         duration: duration,

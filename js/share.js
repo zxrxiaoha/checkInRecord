@@ -14,10 +14,10 @@ class ShareManager {
     async generateAchievementImage() {
         const records = checkIn.getAllRecords();
         const totalDays = new Set(records.map(r => new Date(r.date).toDateString())).size;
-        const totalHours = records.reduce((acc, cur) => {
-            const [h] = cur.duration.split(':').map(Number);
-            return acc + h;
-        }, 0);
+        const totalHours = Math.round(records.reduce((acc, cur) => {
+            const [h, m] = cur.duration.split(':').map(Number);
+            return acc + h + m / 60;
+        }, 0));
 
         // 创建渐变背景
         const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
