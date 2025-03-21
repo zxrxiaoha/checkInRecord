@@ -1,3 +1,8 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -46,30 +51,16 @@
     background: white;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.1);
     max-width: 400px;
 }
 
-/* 记录列表样式 */
-.records-section {
-    flex: 1.4;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
 /* 移动端响应式布局 */
 @media screen and (max-width: 768px) {
     .main-content {
         flex-direction: column;
     }
-
-    .calendar-section,
-    .records-section {
-        width: 100%;
-    }
-
     .calendar-section {
         margin-bottom: 30px;
     }
@@ -183,7 +174,8 @@
     background: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
 }
 
 .records-header {

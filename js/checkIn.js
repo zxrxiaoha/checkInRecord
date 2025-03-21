@@ -1,4 +1,6 @@
 // 打卡操作相关功能
+import modal from './modal.js';
+
 class CheckInManager {
     constructor() {
         this.timer = null;
@@ -66,7 +68,8 @@ class CheckInManager {
         // 验证结束时间必须大于开始时间
         // 验证时间有效性
         if (recordEndTime <= startTime) {
-            return alert('补卡结束时间必须大于开始时间');
+            modal.alert('补卡结束时间必须大于开始时间');
+            return;
         }
 
         const diff = recordEndTime - startTime;

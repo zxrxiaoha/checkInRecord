@@ -2,6 +2,7 @@
 import checkIn from './checkIn.js';
 import calendar from './calendar.js';
 import recordManager from './recordManager.js';
+import modal from './modal.js';
 
 class App {
     constructor() {
@@ -35,11 +36,11 @@ class App {
             const selectedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
             if (selectedDate > today) {
-                alert('不能补卡未来日期！');
+                modal.alert('不能补卡未来日期！');
                 return;
             }
 
-            if (confirm('是否要在这一天补卡？')) {
+            modal.confirm('是否要在这一天补卡？', () => {
                 const dialog = document.createElement('div');
                 dialog.innerHTML = `
                     <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
@@ -87,7 +88,7 @@ class App {
                         // 验证当天的补卡时间
                         if (selectedDate.getTime() === today.getTime() && 
                             (startDate > now || endDate > now)) {
-                            alert('今天只能补卡当前时间之前的时段！');
+                            modal.alert('今天只能补卡当前时间之前的时段！');
                             return;
                         }
 
@@ -96,7 +97,7 @@ class App {
                     }
                     document.body.removeChild(dialog);
                 };
-            }
+            });
         });
 
         // 日历月份变化事件
@@ -118,9 +119,9 @@ class App {
                     checkIn.records.push(...importedRecords);
                     checkIn.saveRecords();
                     this.updateUI();
-                    alert('导入成功！');
+                    modal.alert('导入成功！');
                 } catch (error) {
-                    alert(error.message);
+                    modal.alert(error.message);
                 }
             }
         });
@@ -128,31 +129,31 @@ class App {
 
     // 结束打卡
     endCheckIn() {
-        const content = prompt('请输入打卡内容（可选）：');
-        checkIn.endCheckIn(content);
-        document.getElementById('startCheckIn').textContent = '开始打卡';
-        document.getElementById('timer').textContent = '00:00:00';
-        this.updateUI();
+        modal.prompt('请输入打卡内容（可选）：', '', (content) => {
+            checkIn.endCheckIn(content);
+            document.getElementById('startCheckIn').textContent = '开始打卡';
+            document.getElementById('timer').textContent = '00:00:00';
+            this.updateUI();
+        });
     }
 
     // 编辑记录
     editRecord(id) {
         const record = checkIn.records.find(r => r.id === parseInt(id));
         if (record) {
-            const newContent = prompt('请输入新的内容：', record.content);
-            if (newContent !== null) {
+            modal.prompt('请输入新的内容：', record.content, (newContent) => {
                 checkIn.editRecord(parseInt(id), newContent);
                 this.updateUI();
-            }
+            });
         }
     }
 
     // 删除记录
     deleteRecord(id) {
-        if (confirm('确定要删除这条记录吗？')) {
+        modal.confirm('确定要删除这条记录吗？', () => {
             checkIn.deleteRecord(parseInt(id));
             this.updateUI();
-        }
+        });
     }
 
     // 更新界面
