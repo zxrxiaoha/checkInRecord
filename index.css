@@ -10,11 +10,23 @@
     font-family: Arial, sans-serif;
 }
 
+#shareAchievement {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: #4CAF50;
+}
+
 /* 打卡区域样式 */
 .check-in-section {
     text-align: center;
     margin-bottom: 30px;
 }
+
 #toggleStats,
 #startCheckIn {
     padding: 10px 20px;
@@ -124,6 +136,7 @@
     .main-content {
         flex-direction: column;
     }
+
     .calendar-section {
         margin-bottom: 30px;
     }

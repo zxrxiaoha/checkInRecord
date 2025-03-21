@@ -4,6 +4,7 @@ import calendar from './calendar.js';
 import recordManager from './recordManager.js';
 import modal from './modal.js';
 import stats from './stats.js';
+import share from './share.js';
 
 class App {
     constructor() {
@@ -159,6 +160,11 @@ class App {
                     modal.alert(error.message);
                 }
             }
+        });
+
+        // 分享成就按钮事件
+        document.getElementById('shareAchievement').addEventListener('click', () => {
+            share.previewAchievement();
         });
 
         // 生成测试数据
